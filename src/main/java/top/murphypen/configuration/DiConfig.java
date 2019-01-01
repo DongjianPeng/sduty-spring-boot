@@ -1,10 +1,6 @@
 package top.murphypen.configuration;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.*;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import top.murphypen.async.AsyncTaskService;
 import top.murphypen.async.TaskExecutorConfig;
@@ -19,8 +15,6 @@ import top.murphypen.service.DemoAnnotationService;
 import top.murphypen.service.DemoAware;
 import top.murphypen.service.DemoMethodService;
 import top.murphypen.service.UseFunctionService;
-
-import java.util.concurrent.TimeUnit;
 
 @Configuration
 @ComponentScan({"top.murphypen.service",
