@@ -1,20 +1,34 @@
 package top.murphypen.configuration;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.web.WebApplicationInitializer;
+import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
+import org.springframework.web.servlet.DispatcherServlet;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import org.springframework.web.servlet.view.JstlView;
 import top.murphypen.async.AsyncTaskService;
 import top.murphypen.async.TaskExecutorConfig;
 import top.murphypen.beanmanager.DemoBeanManagerByAnnotation;
 import top.murphypen.beanmanager.DemoBeanManagerByJava;
-import top.murphypen.condition.OSInterface;
+import top.murphypen.condition.impl.OSInterface;
 import top.murphypen.el.ELTestClass;
 import top.murphypen.event.DemoPublisher;
+import top.murphypen.interceptor.DemoInterceptor;
 import top.murphypen.scope.DemoPrototypeService;
 import top.murphypen.scope.DemoSingletonService;
 import top.murphypen.service.DemoAnnotationService;
 import top.murphypen.service.DemoAware;
 import top.murphypen.service.DemoMethodService;
 import top.murphypen.service.UseFunctionService;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRegistration;
 
 @Configuration
 @ComponentScan({"top.murphypen.service",
@@ -25,10 +39,13 @@ import top.murphypen.service.UseFunctionService;
         "top.murphypen.async",
         "top.murphypen.schedule",
         "top.murphypen.condition",
+        "top.murphypen.controller",
+        "top.murphypen.interceptor",
         "top.murphypen.el"})
 @EnableAspectJAutoProxy
 @EnableScheduling
-public class DiConfig extends TaskExecutorConfig {
+@EnableWebMvc
+public class DiConfig extends TaskExecutorConfig implements WebApplicationInitializer {
 
     @Bean(initMethod = "init", destroyMethod = "destory")
     DemoBeanManagerByJava demoBeanManagerByJava() {
@@ -45,6 +62,17 @@ public class DiConfig extends TaskExecutorConfig {
         return new ProfileConfig();
     }
 
+    @Bean
+    public InternalResourceViewResolver viewResolver() {
+        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+        viewResolver.setPrefix("/WEB-INF/classes/view/");
+        viewResolver.setSuffix(".jsp");
+        viewResolver.setViewClass(JstlView.class);
+        return viewResolver;
+    }
+
+    @Autowired
+    DemoInterceptor demoInterceptor;
 
 
     public static void main(String[] args) throws InterruptedException {
@@ -94,4 +122,26 @@ public class DiConfig extends TaskExecutorConfig {
     }
 
 
+    @Override
+    public void onStartup(ServletContext servletContext) throws ServletException {
+        AnnotationConfigWebApplicationContext ctx = new AnnotationConfigWebApplicationContext();
+        ctx.register(DiConfig.class);
+        ctx.setServletContext(servletContext);
+
+        ServletRegistration.Dynamic servlet = servletContext.addServlet("dispatcher", new DispatcherServlet(ctx));
+        servlet.addMapping("/");
+        servlet.setLoadOnStartup(1);
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        super.addResourceHandlers(registry);
+        registry.addResourceHandler("/assets/**")
+                .addResourceLocations("classpath:/assets/");
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(demoInterceptor);
+    }
 }

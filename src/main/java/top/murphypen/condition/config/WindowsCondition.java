@@ -1,12 +1,13 @@
-package top.murphypen.condition;
+package top.murphypen.condition.config;
 
 import org.springframework.context.annotation.Condition;
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 
-public class MacCondition implements Condition {
+
+public class WindowsCondition implements Condition {
     @Override
     public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
-        return context.getEnvironment().getProperty("os.name").contains("Mac OS X");
+        return context.getEnvironment().getProperty("os.name").contains("Windows");
     }
 }

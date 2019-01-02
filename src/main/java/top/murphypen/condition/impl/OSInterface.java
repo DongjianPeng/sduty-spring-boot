@@ -1,4 +1,4 @@
-package top.murphypen.condition;
+package top.murphypen.condition.impl;
 
 import org.springframework.stereotype.Component;
 

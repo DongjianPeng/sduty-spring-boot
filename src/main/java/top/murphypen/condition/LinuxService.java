@@ -2,16 +2,15 @@ package top.murphypen.condition;
 
 import org.springframework.context.annotation.Conditional;
 import org.springframework.stereotype.Component;
-import top.murphypen.condition.config.MacCondition;
+import top.murphypen.condition.config.LinuxCondition;
 import top.murphypen.condition.impl.OSInterface;
 
 @Component
-@Conditional(MacCondition.class)
-public class MacService implements OSInterface {
-
+@Conditional(LinuxCondition.class)
+public class LinuxService implements OSInterface {
     @Override
     public String showList() {
-        System.out.println("ls -al --mac");
+        System.out.println("ls -al --linux");
         return "ls -al";
     }
 }

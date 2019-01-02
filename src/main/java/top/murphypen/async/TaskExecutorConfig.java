@@ -6,11 +6,12 @@ import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.util.concurrent.Executor;
 
 @EnableAsync
-public class TaskExecutorConfig implements AsyncConfigurer {
+public class TaskExecutorConfig extends WebMvcConfigurerAdapter implements AsyncConfigurer {
     @Override
     public Executor getAsyncExecutor() {
         System.err.println("Async Enable");
