@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import top.murphypen.service.FunctionService;
 import top.murphypen.service.UseFunctionService;
 
-@Configuration
+//@Configuration
 public class JavaConfig {
 
     @Bean
