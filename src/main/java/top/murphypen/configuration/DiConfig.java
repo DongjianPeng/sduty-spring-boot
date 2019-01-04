@@ -41,6 +41,7 @@ import javax.servlet.ServletRegistration;
         "top.murphypen.condition",
         "top.murphypen.controller",
         "top.murphypen.interceptor",
+        "top.murphypen.sse",
         "top.murphypen.advice",
         "top.murphypen.el"})
 @EnableAspectJAutoProxy
@@ -164,6 +165,7 @@ public class DiConfig extends TaskExecutorConfig implements WebApplicationInitia
         super.addViewControllers(registry);
         registry.addViewController("/index").setViewName("/index");
         registry.addViewController("/toUpload").setViewName("/upload");
+        registry.addViewController("/sse").setViewName("/sse");
 
     }
 }
